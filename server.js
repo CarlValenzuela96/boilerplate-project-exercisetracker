@@ -23,7 +23,7 @@ const userSchema = new Schema({
 
 const excerciseSchema = new Schema({
   description: { type: String },
-  duration: { type: String },
+  duration: { type: Number },
   username: { type: String },
   date: { type: Date }
 })
@@ -33,7 +33,7 @@ const logSchema = new Schema({
   username: { type: String },
   log: [{
     description: { type: String },
-    duration: { type: String },
+    duration: { type: Number },
     date: { type: String }
   }]
 })
