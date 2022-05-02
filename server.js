@@ -110,13 +110,20 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
 app.get('/api/users/:_id/logs', async (req, res) => {
   let user = await User.findById(req.params._id)
-  let logs = await Log.find({ username: user.username }).select('-__v').select(' -log._id')
 
+  let params = { username: user.username }
+  if (req.query.from && req.query.to) params.date = { "$gte": new Date(req.query.from).toDateString(), "$lte":new Date(req.query.to).toDateString() }
+
+  console.log(params)
+
+  let exercises = await Excercise.find(params).select('-__v').select('-_id').limit(req.query.limit)
+  // let logs = await Log.find({ username: user.username, created: { "$gte": "2016-01-01T00:00:00.000Z", "$lte": "2016-10-10T06:28:37.146Z" } }).select('-__v').select(' -log._id').limit(req.query.limit)
+  // 
   return res.send({
     _id: user._id,
-    username: logs.username,
-    count: logs.count,
-    log: logs.log
+    username: user.username,
+    count: exercises.length,
+    log: exercises
   })
 })
 
