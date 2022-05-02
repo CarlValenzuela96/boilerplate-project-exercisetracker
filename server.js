@@ -95,17 +95,17 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
   await exercise.save()
   return res.send({
-    username: exercise.username,
+    _id: user._id,
+    username: user.username,
     description: exercise.description,
     duration: exercise.duration,
     date: exercise.date,
-    _id: exercise._id
   })
 })
 
 app.get('/api/users/:_id/logs', async (req, res) => {
   let user = await User.findById(req.params._id)
-  let logs = await Log.find({ username: user.username })
+  let logs = await Log.find({ username: user.username }).select('-__v')
 
   return res.send(logs)
 })
