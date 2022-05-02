@@ -110,7 +110,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
 app.get('/api/users/:_id/logs', async (req, res) => {
   let user = await User.findById(req.params._id)
-  let logs = await Log.find({ username: user.username }).select('-__v')
+  let logs = await Log.find({ username: user.username }).select('-__v').select(' -log._id')
 
   return res.send(logs)
 })
