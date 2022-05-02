@@ -25,7 +25,8 @@ const excerciseSchema = new Schema({
   description: { type: String },
   duration: { type: Number },
   username: { type: String },
-  date: { type: String }
+  date: { type: String },
+  parsedDate: { type: Date }
 })
 
 const logSchema = new Schema({
@@ -67,7 +68,8 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     username: user.username,
     description: req.body.description,
     duration: req.body.duration,
-    date: req.body.date ? new Date(req.body.date).toDateString() : new Date().toDateString()
+    date: req.body.date ? new Date(req.body.date).toDateString() : new Date().toDateString(),
+    parsedDate: req.body.date ? new Date(req.body.date) : new Date()
   })
 
   let logExists = await Log.findOne({ username: user.username })
@@ -112,11 +114,11 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   let user = await User.findById(req.params._id)
 
   let params = { username: user.username }
-  if (req.query.from && req.query.to) params.date = { "$gte": new Date(req.query.from).toDateString(), "$lte":new Date(req.query.to).toDateString() }
+  if (req.query.from && req.query.to) params.parsedDate = { "$gte": new Date(req.query.from), "$lte": new Date(req.query.to) }
 
   console.log(params)
 
-  let exercises = await Excercise.find(params).select('-__v').select('-_id').limit(req.query.limit)
+  let exercises = await Excercise.find(params).select('-__v').select('-_id').select('-parsedDate').limit(req.query.limit)
   // let logs = await Log.find({ username: user.username, created: { "$gte": "2016-01-01T00:00:00.000Z", "$lte": "2016-10-10T06:28:37.146Z" } }).select('-__v').select(' -log._id').limit(req.query.limit)
   // 
   return res.send({
