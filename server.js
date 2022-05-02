@@ -112,7 +112,12 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   let user = await User.findById(req.params._id)
   let logs = await Log.find({ username: user.username }).select('-__v').select(' -log._id')
 
-  return res.send(logs)
+  return res.send({
+    _id: user._id,
+    username: logs.username,
+    count: logs.count,
+    log: logs.log
+  })
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
