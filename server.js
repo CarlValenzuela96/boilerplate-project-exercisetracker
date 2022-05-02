@@ -62,7 +62,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     username: user.username,
     description: req.body.description,
     duration: req.body.duration,
-    date: new Date(req.body.date).getUTCDate() ? req.body.date : new Date().getUTCDate()
+    date: req.body.date ? new Date(req.body.date).getUTCDate() : new Date().getUTCDate()
   })
 
   let logExists = await Log.findOne({ username: user.username })
