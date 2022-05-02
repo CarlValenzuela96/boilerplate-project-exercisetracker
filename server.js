@@ -94,7 +94,12 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   }
 
   await exercise.save()
-  return res.send(exercise)
+  return res.send({
+    username: exercise.username,
+    description: exercise.description,
+    duration: exercise.duration,
+    date: exercise.date
+  })
 })
 
 app.get('/api/users/:_id/logs', async (req, res) => {
