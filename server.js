@@ -25,7 +25,7 @@ const excerciseSchema = new Schema({
   description: { type: String },
   duration: { type: Number },
   username: { type: String },
-  date: { type: Date }
+  date: { type: String }
 })
 
 const logSchema = new Schema({
@@ -58,11 +58,16 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users/:_id/exercises', async (req, res) => {
   let user = await User.findById(req.params._id)
 
+  // let date = req.body.date ? new Date(req.body.date) : new Date()
+  // console.log(date.toDateString())
+  // console.log(date.getDate())
+  // console.log(date.getUTCDate())
+
   let exercise = new Excercise({
     username: user.username,
     description: req.body.description,
     duration: req.body.duration,
-    date: req.body.date ? new Date(req.body.date).getUTCDate() : new Date().getUTCDate()
+    date: req.body.date ? new Date(req.body.date).toDateString() : new Date().toDateString()
   })
 
   let logExists = await Log.findOne({ username: user.username })
